@@ -1,7 +1,7 @@
 package com.wardiusz.beautysalonapp.dto.places.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wardiusz.beautysalonexplorerapp.dto.places.PlacesDto;
+import com.wardiusz.beautysalonapp.dto.places.PlacesDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

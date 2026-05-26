@@ -109,11 +109,11 @@ public class PlacesServiceImpl implements PlacesService {
         do {
             PlacesResponse response = callApi(query, nextPageToken);
             if (response == null) {
-                log.warn("  Got null response for query '{}'", query);
+                log.warn("!!  Got null response for query '{}'", query);
                 break;
             }
             if (response.getPlaces() == null || response.getPlaces().isEmpty()) {
-                log.warn("  Empty/null places list for query '{}'", query);
+                log.warn("!!  Empty/null places list for query '{}'", query);
                 break;
             }
 
@@ -126,9 +126,8 @@ public class PlacesServiceImpl implements PlacesService {
                     Salon salon = PlacesMapper.toSalon(place);
                     if (salon != null) {
                         accumulator.put(place.getId(), salon);
-                        log.info("  ✓ Mapped: {}", salon.getNameOfBusiness());
                     } else {
-                        log.warn("  ✗ Mapper returned null for id={}", place.getId());
+                        log.warn("!! Mapper returned null for id={}", place.getId());
                     }
                 }
             }
@@ -156,23 +155,20 @@ public class PlacesServiceImpl implements PlacesService {
         HttpEntity<PlacesRequest> request = new HttpEntity<>(requestBody, headers);
 
         try {
-            // Step 1: fetch raw JSON so we can see exactly what Google returns
             ResponseEntity<String> raw = restTemplate.exchange(
                     SEARCH_URL, HttpMethod.POST, request, String.class);
 
             String body = raw.getBody();
-            log.info("  RAW (500 chars): {}", body != null ? body.substring(0, Math.min(500, body.length())) : "null");
 
             if (raw.getStatusCode() != HttpStatus.OK || body == null) {
                 log.warn("  Non-OK status {}", raw.getStatusCode());
                 return null;
             }
 
-            // Step 2: manually deserialize so Jackson errors are visible
             return objectMapper.readValue(body, PlacesResponse.class);
 
         } catch (Exception e) {
-            log.error("  API call failed: {}", e.getMessage(), e);
+            log.error("!!  API call failed: {}", e.getMessage(), e);
         }
         return null;
     }

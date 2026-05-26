@@ -1,6 +1,7 @@
 package com.wardiusz.beautysalonapp.dto.places;
 
 import com.wardiusz.beautysalonapp.repository.SalonRepository;
+import com.wardiusz.beautysalonapp.service.PlacesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
