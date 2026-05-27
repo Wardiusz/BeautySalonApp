@@ -149,6 +149,7 @@ config/             → RestTemplate, CORS, app config
 - Add Spring Security with JWT authentication so only salon owners can edit their own records
 - Add proper pagination to `GET /api/v1/salons` (`Pageable`) instead of returning the full list
 - Store the Google Places API key in a secrets manager (e.g. AWS Secrets Manager) rather than environment variables
+- Add tests for the backend services
 
 ### Frontend
 - Build with a proper component library and better styling
