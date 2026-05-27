@@ -26,10 +26,18 @@ cp .env.example .env
 
 Open `.env` and fill in your values:
 
+```dotenv
+DB_USERNAME=user
+DB_PASSWORD=password
+GOOGLE_PLACES_API_KEY=YOUR_GOOGLE_PLACES_KEY_HERE
 ```
-DB_USERNAME=salon_user
-DB_PASSWORD=salon_pass
-GOOGLE_PLACES_API_KEY=AIzaSy_YOUR_KEY_HERE
+
+optionally add:
+
+```dotenv
+DB_HOST=localhost
+DB_PORT=0000
+DB_NAME=example-db
 ```
 
 ### 3. Start the application
@@ -44,7 +52,7 @@ This starts two containers:
 
 The app waits for the database to be healthy before starting.
 
-### 4. Seed the database with Warsaw salons
+### 4. Seed the database with salons
 
 Run this once to fetch salons from Google Places and populate the database:
 
@@ -53,9 +61,11 @@ docker compose run --rm -e SPRING_PROFILES_ACTIVE=prod,seed app
 ```
 
 The number of salons fetched is controlled by:
-```
+
+```properties
 google.places.target-count=100
 ```
+
 in `application.properties`.
 
 ### 5. Access the API
