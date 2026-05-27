@@ -97,6 +97,17 @@ To seed in dev mode:
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev,seed
 ```
 
+### 6. Start the frontend
+
+Run this in a separate terminal:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+then open `http://localhost:5173` in your browser.
+
 ---
 
 ## Tech Stack & Solution
