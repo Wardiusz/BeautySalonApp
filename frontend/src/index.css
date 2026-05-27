@@ -399,6 +399,7 @@ code {
   display: flex;
   justify-content: center;
   width: 100%;
+  gap: inherit;
 }
 
 .input--search {
@@ -450,6 +451,33 @@ code {
   text-transform: uppercase;
   letter-spacing: .06em;
   font-weight: 500;
+}
+
+.btn-search,
+.btn-clear {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 0.5px solid var(--s-border-soft);
+  background: var(--s-surface);
+  color: var(--s-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-search:hover,
+.btn-save:hover,
+.btn-clear:hover,
+.btn-cancel:hover,
+.btn-edit:hover {
+  transition: background .15s;
+}
+
+.btn-search:hover,
+.btn-save:hover,
+.btn-clear:hover,
+.btn-cancel:hover,
+.btn-edit:hover {
+  background: var(--s-primary)
 }
 
 .btn-group {
