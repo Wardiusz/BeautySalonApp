@@ -4,6 +4,11 @@
 
 ---
 
+- [How to run](#how-to-run)
+- [Tech Stack & Solution](#tech-stack--solution)
+- [Running the App](#running-the-app)
+- [Developer Notes](#developer-notes)
+- 
 ## How to Run
 
 ### Prerequisites
@@ -94,7 +99,7 @@ To seed in dev mode:
 
 ---
 
-## Technical Solution
+## Tech Stack & Solution
 
 ### Architecture
 
@@ -149,7 +154,7 @@ config/             → RestTemplate, CORS, app config
 
 ---
 
-## What I'd Improve With More Time
+## Developer Notes
 
 ### Data quality
 - Scrape individual salon websites for real price data instead of estimating/guessing from Google's `priceLevel` enum
