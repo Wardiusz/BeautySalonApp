@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useCallback} from "react";
 
 const API = "http://localhost:8080/api/v1";
 
@@ -27,27 +27,28 @@ function PriceRange({ low, high }) {
 
 function SalonCard({ salon, active, onClick }) {
   return (
-    <div
-      onClick={() => onClick(salon)}
-      className={`salon-card${active ? " salon-card--active" : ""}`}
-    >
-      <div className="salon-card__header">
-        <div className="salon-card__name-wrap">
-          <p className="salon-card__name">{salon.nameOfBusiness}</p>
-          <Badge text={salon.district} />
+      <div
+          onClick={() => onClick(salon)}
+          className={`salon-card${active ? " salon-card--active" : ""}`}
+      >
+        <div className="salon-card__header">
+          <div className="salon-card__name-wrap">
+            <p className="salon-card__name">{salon.nameOfBusiness}</p>
+            <Badge text={salon.district} />
+          </div>
+          {active && <span className="salon-card__arrow">›</span>}
         </div>
-        {active && <span className="salon-card__arrow">›</span>}
-      </div>
-      <div className="salon-card__footer">
-        <div className="salon-card__rating">
-          <Stars rating={salon.rating} />
-          <span className="salon-card__rating-text">
+
+        <div className="salon-card__footer">
+          <div className="salon-card__rating">
+            <Stars rating={salon.rating} />
+            <span className="salon-card__rating-text">
             {salon.rating?.toFixed(1) || "—"} ({salon.amountOfReviews || 0})
           </span>
+          </div>
+          <PriceRange low={salon.priceLow} high={salon.priceHigh} />
         </div>
-        <PriceRange low={salon.priceLow} high={salon.priceHigh} />
       </div>
-    </div>
   );
 }
 
@@ -192,20 +193,34 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [search, setSearch] = useState("");
+  const [districtFilter, setDistrictFilter] = useState("");
+  const [servicesFilter, setServicesFilter] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  useEffect(() => {
-    fetch(`${API}/salons`)
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-      .then(data => { setSalons(data); setLoading(false); })
-      .catch(e => { setError(e.message); setLoading(false); });
+  const fetchSalons = useCallback((district, services) => {
+    const params = new URLSearchParams();
+    if (district) params.set("district", district);
+    if (services) {
+      services.split(",")
+          .map(s => s.trim())
+          .filter(Boolean)
+          .forEach(s => params.append("services", s));
+    }
+
+    fetch(`${API}/salons?${params}`)
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .then(data => { setSalons(data); setLoading(false); })
+        .catch(e => { setError(e.message); setLoading(false); });
   }, []);
 
-  const filtered = salons.filter(s =>
-    (s.nameOfBusiness || "").toLowerCase().includes(search.toLowerCase()) ||
-    (s.district || "").toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => { fetchSalons("", ""); }, [fetchSalons]);
+
+  const handleSearch = () => fetchSalons(districtFilter, servicesFilter);
+  const handleClear = () => {
+    setDistrictFilter("");
+    setServicesFilter("");
+    fetchSalons("", "");
+  };
 
   const handleSelect = salon => { setSelected(salon); setEditing(false); setEditForm(null); setSaveSuccess(false); };
   const handleEdit = () => { setEditForm({ ...selected }); setEditing(true); };
@@ -242,12 +257,25 @@ export default function App() {
         </div>
         <div className="input-wrap">
           <input
-            type="text" placeholder="Search salons or districts…"
-            value={search} onChange={e => setSearch(e.target.value)}
-            className="input input--search"
+              type="text" placeholder="District…"
+              value={districtFilter}
+              onChange={e => setDistrictFilter(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleSearch()}
+              className="input input--search"
           />
+          <input
+              type="text" placeholder="Service…"
+              value={servicesFilter}
+              onChange={e => setServicesFilter(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleSearch()}
+              className="input input--search"
+          />
+          <button onClick={handleSearch} className="btn-search">Search</button>
+          {(districtFilter || servicesFilter) && (
+              <button onClick={handleClear} className="btn-clear">✕</button>
+          )}
         </div>
-        <span className="app-header__count">{filtered.length} salons</span>
+        <span className="app-header__count">{salons.length} salons</span>
       </div>
 
       {/* Body */}
@@ -269,12 +297,19 @@ export default function App() {
               </p>
             </div>
           )}
-          {!loading && !error && filtered.length === 0 && (
+          {!loading && !error && salons.length === 0 && (
             <div className="state-placeholder">
-              <p className="state-text">No salons match "{search}"</p>
+              No salons match
+              {districtFilter && <> district "<strong>{districtFilter}</strong>"</>}
+              {districtFilter && servicesFilter && " and"}
+              {servicesFilter && (
+                  <> services "<strong>
+                    {servicesFilter.split(",").map(s => s.trim()).filter(Boolean).join(", ")}
+                  </strong>"</>
+              )}
             </div>
           )}
-          {filtered.map(s => (
+          {salons.map(s => (
             <SalonCard key={s.id} salon={s} active={selected?.id === s.id} onClick={handleSelect} />
           ))}
         </div>

@@ -2,6 +2,7 @@ package com.wardiusz.beautysalonapp.repository;
 
 import com.wardiusz.beautysalonapp.dto.salon.SalonFilter;
 import com.wardiusz.beautysalonapp.entity.Salon;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -34,7 +35,8 @@ public class SalonSpecification {
 
             query.distinct(true);
 
-            return root.join("services").get("name").in(services);
+            Join<Salon, String> serviceJoin = root.join("services");
+            return serviceJoin.in(services);
         };
     }
 

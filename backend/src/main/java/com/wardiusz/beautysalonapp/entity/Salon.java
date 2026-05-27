@@ -31,7 +31,10 @@ public class Salon {
 
     private String website;
 
-    private List<String> services = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "salon_services", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "name")
+    private List<String> services;
 
     private double priceLow;
 
