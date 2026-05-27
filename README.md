@@ -8,7 +8,7 @@
 - [Tech Stack & Solution](#tech-stack--solution)
 - [Running the App](#running-the-app)
 - [Developer Notes](#developer-notes)
-- 
+
 ## How to Run
 
 ### Prerequisites
