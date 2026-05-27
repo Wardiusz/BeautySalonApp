@@ -41,7 +41,7 @@ optionally add:
 
 ```dotenv
 DB_HOST=localhost
-DB_PORT=0000
+DB_PORT=8080
 DB_NAME=example-db
 ```
 
